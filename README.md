@@ -6,33 +6,34 @@ etc. Additionally, a reusable game structure is introduced where resources are
 loaded according to the screen size of device. In the game the player's objective
 is to defend the base and destroy all enemy tanks.
 
+This example application is hosted in GitHub:
+https://github.com/nokia-developer/battle-tank
+
 This example application demonstrates:
-- using Java ME gaming features such as sprites and tiles
-- resusable game structure
-- using different resources for different screen sizes
+* using Java ME gaming features such as sprites and tiles
+* resusable game structure
+* using different resources for different screen sizes
 
+1. Project structure and implementation
 -------------------------------------------------------------------------------
+Prerequisites
 
-PREREQUISITES
+* Java ME basics
+* Java ME threads and timers
 
-Java ME basics
-Java ME threads and timers
-
+1.1 Important files and classes
 -------------------------------------------------------------------------------
+* `src\..\BattleTankCanvas.java`
+* `src\..\Game.java`
+* `src\..\Resources.java`
+* `src\..\Level.java`
 
-IMPORTANT FILES AND CLASSES
-
-src\..\BattleTankCanvas.java
-src\..\Game.java
-src\..\Resources.java
-src\..\Level.java
-
+1.2 Used J2ME classes
+-------------------------------------------------------------------------------
 Classes: GameCanvas, Vector, Graphics, Image, Sprite, TiledLayer.
 
+1.3 Design considerations
 -------------------------------------------------------------------------------
-
-DESIGN CONSIDERATIONS
-
 There is a game loop running in a thread which force-sleeps at least 1 ms 
 between loops to ensure that UI thread events are caught. The thread is paused when a 
 screensaver starts, there is a incoming call, or so on, to prevent excess power 
@@ -44,16 +45,26 @@ Image resources are pre-scaled for three different resolutions: high
 The state of the game is stored when the user closes the application. The user 
 can resume to the saved state when returning to play again.
 
+2. Compatibility
 -------------------------------------------------------------------------------
+Nokia Asha software platform and Series 40 phones supporting CLDC 1.1, MIDP 2.0
+and Mobile Media API (JSR-135)
 
-KNOWN ISSUES
+Tested on:
+Nokia Asha 501, Nokia Asha 311, Nokia Asha 308, Nokia Asha 306, Nokia Asha 305,
+Nokia Asha 303, Nokia Asha 302, Nokia Asha 203, Nokia Asha 202
+and Nokia Asha 201
 
+Developed with:
+* Netbeans 7.1.2
+* Nokia Asha SDK 1.0
+
+2.1 Known issues
+----------------
 Mixing sounds does not work in Symbian phones.
 
+3. Building, installing, and running the application
 -------------------------------------------------------------------------------
-
-BUILD AND INSTALLATION INSTRUCTIONS
-
 The example has been created with NetBeans 7.1.2 and Nokia SDK 2.0.
 The project can be easily opened in NetBeans by selecting 'Open Project' 
 from the File menu and selecting the application. 
@@ -67,10 +78,8 @@ via Nokia Suite or via Bluetooth.
 
 The example can also be built using Eclipse.
 
+3.1 Running the application
 -------------------------------------------------------------------------------
-
-RUNNING THE EXAMPLE
-
 From the menu, the player can resume to the latest game, start a new game,
 set sounds on/off, and exit the game.
 
@@ -83,29 +92,12 @@ The top bar shows the number of player's tanks, current score points, and
 enemies left in the current level. The menu button is in the bottom-right
 corner.
 
+4.1 Version history
 -------------------------------------------------------------------------------
 
-COMPATIBILITY
-
-Nokia Asha software platform and Series 40 phones supporting CLDC 1.1, MIDP 2.0
-and Mobile Media API (JSR-135)
-
-Tested on:
-Nokia Asha 501, Nokia Asha 311, Nokia Asha 308, Nokia Asha 306, Nokia Asha 305,
-Nokia Asha 303, Nokia Asha 302, Nokia Asha 203, Nokia Asha 202
-and Nokia Asha 201
-
-Developed with:
-Netbeans 7.1.2
-Nokia Asha SDK 1.0
-
--------------------------------------------------------------------------------
-
-CHANGE HISTORY
-
-1.0 First release
-1.1 In-app purchase Release
-1.2 Added restoration
-1.3 Ported for FT devices
-1.4 Nokia Asha software platform support added, In-app purchasing removed. 
-    Fixed menu navigation for non touch devices
+* 1.4 Nokia Asha software platform support added, In-app purchasing removed. 
+  Fixed menu navigation for non touch devices
+* 1.3 Ported for FT devices
+* 1.2 Added restoration
+* 1.1 In-app purchase Release
+* 1.0 First release
