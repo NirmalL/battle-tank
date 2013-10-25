@@ -6,13 +6,17 @@ etc. Additionally, a reusable game structure is introduced where resources are
 loaded according to the screen size of device. In the game the player's objective
 is to defend the base and destroy all enemy tanks.
 
-This example application is hosted in GitHub:
-https://github.com/nokia-developer/battle-tank
-
 This example application demonstrates:
 * using Java ME gaming features such as sprites and tiles
 * resusable game structure
 * using different resources for different screen sizes
+
+This example application is hosted in GitHub:
+https://github.com/nokia-developer/battle-tank
+
+For more information on the implementation, visit Java Developer's Library:
+http://developer.nokia.com/Resources/Library/Java/#!code-examples/game-api-battletank.html
+
 
 1. Project structure and implementation
 -------------------------------------------------------------------------------
