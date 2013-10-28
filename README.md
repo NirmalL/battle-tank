@@ -96,7 +96,7 @@ The top bar shows the number of player's tanks, current score points, and
 enemies left in the current level. The menu button is in the bottom-right
 corner.
 
-4.1 Version history
+4 Version history
 -------------------------------------------------------------------------------
 
 * 1.4 Nokia Asha software platform support added, In-app purchasing removed. 
