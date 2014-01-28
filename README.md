@@ -1,15 +1,22 @@
 Battle Tank 
 ===========
 
-This application demonstrates the usage of Java ME gaming features: sprites, tiles 
-etc. Additionally, a reusable game structure is introduced where resources are
-loaded according to the screen size of device. In the game the player's objective
-is to defend the base and destroy all enemy tanks.
+This application demonstrates the usage of Java ME gaming features: sprites,
+tiles etc. Additionally, a reusable game structure is introduced where resources
+are loaded according to the screen size of device. In the game the player's
+objective is to defend the base and destroy all enemy tanks.
+
+In addition, the example features the Nokia In-Application Payment API.
+Initially the application is a limited trial version. The user can then purchase
+the full version via the main menu. This example utilises the test identifiers
+for the purchasable item and buying the full version does not generate any
+actual costs.
 
 This example application demonstrates:
-* using Java ME gaming features such as sprites and tiles
-* resusable game structure
-* using different resources for different screen sizes
+* Using Java ME gaming features such as sprites and tiles
+* Resusable game structure
+* Using different resources for different screen sizes
+* Nokia In-Application Payment API
 
 This example application is hosted in GitHub:
 https://github.com/nokia-developer/battle-tank
