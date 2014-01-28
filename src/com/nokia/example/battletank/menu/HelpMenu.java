@@ -8,6 +8,7 @@
 */
 package com.nokia.example.battletank.menu;
 
+import com.nokia.example.battletank.Main;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -17,6 +18,8 @@ import javax.microedition.lcdui.Graphics;
 public class HelpMenu
     extends Menu {
 
+    public static final boolean HW_BACK_KEY_EXISTS;
+    public static final int ITEM_COUNT;
     public static final int BACK = 0;
     private final boolean hasPointerEvents;
     private int width;
@@ -26,11 +29,18 @@ public class HelpMenu
     private final Font font = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN,
         Font.SIZE_SMALL);
 
+    static {
+        HW_BACK_KEY_EXISTS = System.getProperty("com.nokia.keyboard.type").equalsIgnoreCase("OnekeyBack");
+        ITEM_COUNT = HW_BACK_KEY_EXISTS ? 0 : 1;
+    }
+
     public HelpMenu(int w, int h, boolean hasPointerEvents, Listener l) {
-        super(1, w, h, l);
+        super(ITEM_COUNT, w, h, l);
         this.hasPointerEvents = hasPointerEvents;
-        setItem(BACK, new MenuItem(loadSprite("back.png", 2)));
-        setSize(w, h);
+        if (!HW_BACK_KEY_EXISTS) {
+            setItem(BACK, new MenuItem(loadSprite("back.png", 2)));
+            setSize(w, h);
+        }
     }
 
     public final void setSize(int w, int h) {
@@ -80,6 +90,12 @@ public class HelpMenu
         }
         y += 3 * font.getHeight() / 2;
         g.setFont(fontBold);
+        if (Main.isTrial()) {
+            g.drawString("Purchasing Full Version", x, y, a);
+            y += font.getHeight();
+            g.setFont(font);
+            g.drawString("Select Buy to purchase.", x, y, a);
+        }
         super.paint(g);
     }
 }

@@ -8,6 +8,7 @@
 */
 package com.nokia.example.battletank.game;
 
+import com.nokia.example.battletank.Main;
 import com.nokia.example.battletank.game.dialog.GameOverDialog;
 import com.nokia.example.battletank.game.dialog.LevelCompleteDialog;
 import com.nokia.example.battletank.game.entities.Entity;
@@ -115,7 +116,8 @@ public class Game {
      * @throws ProtectedContentException
      * @throws IOException
      */
-    public void leftSoftkeyPressed() throws IOException {
+    public void leftSoftkeyPressed()
+        throws ProtectedContentException, IOException {
         if (isLevelComplete()) {
             nextLevel();
         }
@@ -130,7 +132,8 @@ public class Game {
      * @throws ProtectedContentException
      * @throws IOException
      */
-    public void newGame() throws IOException {
+    public void newGame()
+        throws ProtectedContentException, IOException {
         gameOverDialog.hide();
         levelCompleteDialog.hide();
         levelNumber = 1;
@@ -145,7 +148,8 @@ public class Game {
      * @throws ProtectedContentException
      * @throws IOException
      */
-    public void nextLevel() throws IOException {
+    public void nextLevel()
+        throws ProtectedContentException, IOException {
         levelCompleteDialog.hide();
         levelNumber++;
         lives++;
@@ -204,6 +208,7 @@ public class Game {
         try {
             bout = new ByteArrayOutputStream();
             DataOutputStream dout = new DataOutputStream(bout);
+            dout.writeBoolean(Main.isTrial());
             dout.writeInt(levelNumber);
             dout.writeInt(lives);
             dout.writeInt(score);
@@ -248,6 +253,7 @@ public class Game {
         try {
             DataInputStream din = new DataInputStream(new ByteArrayInputStream(
                 record));
+            Main.setTrial(din.readBoolean());
             levelNumber = din.readInt();
             lives = din.readInt();
             score = din.readInt();
@@ -302,7 +308,8 @@ public class Game {
         }
     }
 
-    private void loadLevel() throws IOException {
+    private void loadLevel()
+        throws ProtectedContentException, IOException {
         this.enemiesInReserve = Levels.getTotalEnemies(levelNumber);
         level = Level.load(levelNumber, resources);
         createBase();

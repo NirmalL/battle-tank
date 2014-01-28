@@ -78,7 +78,7 @@ public class Hud {
 
         if (hudImgBelow == null) {
             hudImgBelow = initHudImage(w, h);
-            hudG.drawString("MENU", w - padding, -2, Graphics.RIGHT
+            hudG.drawString("PAUSE", w - padding, -2, Graphics.RIGHT
                 | Graphics.TOP);
             if (leftButton == CONTINUE) {
                 hudG.drawString("CONTINUE", padding, -2, Graphics.LEFT

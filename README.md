@@ -99,6 +99,7 @@ corner.
 4 Version history
 -------------------------------------------------------------------------------
 
+* 1.5 Added support for new Nokia In-App Payment API.
 * 1.4 Nokia Asha software platform support added, In-app purchasing removed. 
   Fixed menu navigation for non touch devices
 * 1.3 Ported for FT devices

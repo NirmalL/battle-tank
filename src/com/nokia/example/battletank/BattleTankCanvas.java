@@ -1,20 +1,24 @@
 /**
-* Copyright (c) 2012-2013 Nokia Corporation. All rights reserved.
+* Copyright (c) 2012-2014 Nokia Corporation. All rights reserved.
 * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
 * Oracle and Java are trademarks or registered trademarks of Oracle and/or its
 * affiliates. Other product and company names mentioned herein may be trademarks
 * or trade names of their respective owners. 
 * See LICENSE.TXT for license information.
 */
+
 package com.nokia.example.battletank;
 
 import com.nokia.example.battletank.game.Game;
+import com.nokia.example.battletank.game.ProtectedContentException;
 import com.nokia.example.battletank.game.audio.AudioManager;
 import com.nokia.example.battletank.menu.HelpMenu;
 import com.nokia.example.battletank.menu.AboutMenu;
 import com.nokia.example.battletank.menu.BattleTankMenu;
+import com.nokia.example.battletank.menu.BuyMenu;
 import com.nokia.example.battletank.menu.Menu;
 import java.io.IOException;
+import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
@@ -24,36 +28,38 @@ import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 
-/*
+/**
  * Game canvas class for the user interface.
  */
 public class BattleTankCanvas
     extends GameCanvas
-    implements GameThread.Listener, CommandListener {
-
-    private static final boolean HW_BACK_KEY_EXISTS;
+    implements GameThread.Listener, CommandListener
+{
+    public static final boolean HW_BACK_KEY_EXISTS;
     private static final int MAX_RENDERING_FPS = 12;
     private static final int LEFT_SOFTKEY = -6;
     private static final int RIGHT_SOFTKEY = -7;
+
     private volatile int pointerKeyState = 0;
     private Main main;
-    // menus
+
+    // Menus
     private BattleTankMenu menu;
+    private BuyMenu buyMenu;
     private HelpMenu helpMenu;
     private AboutMenu aboutMenu;
-    // current visible menu
-    private Menu visibleMenu;
-    private Game game;
-    // touch handler
-    private PointerEventHandler pointerEventHandler;
-    // the game loop that is run MAX_RENDERING_FPS timer per second
-    private GameThread gameLoop;
-    private Graphics graphics;
 
+    private Menu visibleMenu; // Currently visible menu
+    private Game game;
+    private PointerEventHandler pointerEventHandler; // Touch handler
+    private GameThread gameLoop; // The game loop that is run MAX_RENDERING_FPS timer per second
+    private Graphics graphics;
     private Command backCommand;
-    
+
     static {
-        HW_BACK_KEY_EXISTS = System.getProperty("com.nokia.keyboard.type").equalsIgnoreCase("OnekeyBack");
+        HW_BACK_KEY_EXISTS =
+            System.getProperty("com.nokia.keyboard.type")
+                .equalsIgnoreCase("OnekeyBack");
     }
 
     /**
@@ -69,17 +75,17 @@ public class BattleTankCanvas
         // create menus
         createMenu();
         createGame();
+        createBuyMenu();
         createHelpMenu();
         createAboutMenu();
 
         createPointerEventHandler();
-        
+
         if (HW_BACK_KEY_EXISTS) {
             backCommand = new Command("Back", Command.BACK, 0);
             this.addCommand(backCommand);
             this.setCommandListener(this);
         }
-
     }
 
     /**
@@ -126,6 +132,22 @@ public class BattleTankCanvas
     }
 
     /**
+     * Shows buy menu.
+     */
+    public void showBuyMenu() {
+        showMenu();
+        buyMenu.selectItem(hasPointerEvents() ? -1 : 0);
+        visibleMenu = buyMenu;
+    }
+
+    /**
+     * Hides the wait indicator in the buy menu.
+     */
+    public void hideBuyMenuWaitIndicator() {
+        buyMenu.hideWaitIndicator();
+    }
+
+    /**
      * Saves the current state of the game to RecordStore
      */
     public void saveGame() {
@@ -150,6 +172,13 @@ public class BattleTankCanvas
                 // Nothing to do here.
             }
         }
+    }
+
+    /**
+     * Hides buy option from the main menu.
+     */
+    public void hideBuyOption() {
+        menu.setBuy(false);
     }
 
     /**
@@ -250,6 +279,9 @@ public class BattleTankCanvas
      * @see javax.microedition.lcdui.Canvas#showNotify()
      */
     protected void showNotify() {
+        if (!Main.isTrial()) {
+            hideBuyOption();
+        }
         graphics = getGraphics();
         startGameLoop();
         // show menu view first
@@ -293,6 +325,9 @@ public class BattleTankCanvas
         if (menu != null) {
             menu.setSize(w, h);
         }
+        if (buyMenu != null) {
+            buyMenu.setSize(w, h);
+        }
         if (helpMenu != null) {
             helpMenu.setSize(w, h);
         }
@@ -312,8 +347,14 @@ public class BattleTankCanvas
             stopGameLoop();
             try {
                 game.leftSoftkeyPressed();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            }
+            catch (ProtectedContentException e) {
+                newGame();
+                showBuyMenu();
+            }
+            catch (IOException ex) {
+                Main.showAlertMessage("Level loading failed",
+                    "Loading of level file failed unexpectedly.", AlertType.ERROR);
             }
 
             startGameLoop();
@@ -325,6 +366,7 @@ public class BattleTankCanvas
             hideCurrentMenu();
         }
         else {
+            saveGame();
             showMenu();
         }
     }
@@ -352,16 +394,19 @@ public class BattleTankCanvas
 
     private void createAboutMenu() {
         aboutMenu = new AboutMenu(getWidth(), getHeight(), new Menu.Listener() {
-
             public void itemClicked(int item) {
                 switch (item) {
                     case AboutMenu.BACK:
                         hideCurrentMenu();
                         showMenu();
                         break;
+                    case BuyMenu.BACK:
+                        hideCurrentMenu();
+                        showMenu();
+                        break;
                 }
             }
-        });
+        }, main);
     }
 
     /**
@@ -387,6 +432,10 @@ public class BattleTankCanvas
     private void newGame() {
         try {
             game.newGame();
+        }
+        catch (ProtectedContentException e) {
+            // should not happen as there should be at least one trial level
+            throw new RuntimeException("No levels.");
         }
         catch (IOException e) {
             // should not happen as there should be at least one trial level
@@ -439,6 +488,21 @@ public class BattleTankCanvas
             });
     }
 
+    private void createBuyMenu() {
+        buyMenu = new BuyMenu(getWidth(), getHeight(), new Menu.Listener() {
+            public void itemClicked(int item) {
+                switch (item) {
+                    case BuyMenu.BUY:
+                        if (main.purchaseFullVersion()) {
+                            buyMenu.showWaitIndicator();
+                        }
+                        
+                        break;
+                }
+            }
+        });
+    }
+
     private void stopGameLoop() {
         if (gameLoop != null) {
             gameLoop.cancel();
@@ -457,6 +521,9 @@ public class BattleTankCanvas
                         newGame();
                         hideCurrentMenu();
                         break;
+                    case BattleTankMenu.FULL_VERSION:
+                        showBuyMenu();
+                        break;
                     case BattleTankMenu.SOUNDS:
                         game.soundsEnabled = menu.toggleSounds();
                         break;
@@ -466,12 +533,10 @@ public class BattleTankCanvas
                     case BattleTankMenu.ABOUT:
                         showAboutMenu();
                         break;
-                    case BattleTankMenu.EXIT:
-                        main.close();
-                        break;
                 }
             }
         });
+        menu.setBuy(Main.isTrial());
     }
 
     public void runGameLoop() {

@@ -76,7 +76,7 @@ public class Level {
      * @throws IOException
      */
     public static Level load(int levelNumber, Resources resources)
-        throws IOException {
+        throws ProtectedContentException, IOException {
         final Image image = Levels.getImage(levelNumber);
         final int w = image.getWidth();
         final int h = image.getHeight();

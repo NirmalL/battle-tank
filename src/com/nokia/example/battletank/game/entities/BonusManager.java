@@ -8,6 +8,7 @@
 */
 package com.nokia.example.battletank.game.entities;
 
+import com.nokia.example.battletank.Main;
 import com.nokia.example.battletank.game.Level;
 import com.nokia.example.battletank.game.Resources;
 import java.io.DataInputStream;
@@ -50,6 +51,9 @@ public class BonusManager
 
     private void spawnABonus() {
         int type = RANDOM.nextInt(6);
+        if (type > 2 && Main.isTrial()) {
+            return;
+        }
         int x = RANDOM.nextInt(level.widthInPixels - entities[0].width);
         int y = RANDOM.nextInt(level.heightInPixels - entities[0].height);
         ((Bonus) nextEntity()).spawn(type, x, y);

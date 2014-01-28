@@ -10,9 +10,8 @@ package com.nokia.example.battletank.menu;
 
 import javax.microedition.lcdui.game.Sprite;
 
-/*
- * Class for a menu item that can be toggled,
- * e.g. sound on and off.
+/**
+ * Class for a menu item that can be toggled, e.g. sound on and off.
  */
 public class ToggleMenuItem
     extends MenuItem {

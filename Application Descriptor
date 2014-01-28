@@ -1,9 +1,13 @@
-MIDlet-1: BattleTank,/appicon.png,com.nokia.example.battletank.Main
-MIDlet-Jar-URL: BattleTank.jar
-MicroEdition-Configuration: CLDC-1.0
-MIDlet-Version: 1.4.0
-MIDlet-Name: BattleTank
-MIDlet-Data-Size: 20000
+MIDlet-1: Battle Tank,/appicon.png,com.nokia.example.battletank.Main
+Nokia-IAP-Pricepoint-1023608: 1
+Nokia-IAP-Pricepoint-success-battle_tank: 1
+MIDlet-Jar-URL: BattleTank_v1_5.jar
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: 1.5
+Nokia-IAP-Pricepoint-1023626: 1
 MIDlet-Vendor: Nokia
-MicroEdition-Profile: MIDP-2.0
+MIDlet-Data-Size: 20000
+MIDlet-Name: Battle Tank
+MicroEdition-Profile: MIDP-2.1
+Nokia-IAP-Pricepoint-fail-battle_tank: 1
 Nokia-MIDlet-On-Screen-Keypad: no

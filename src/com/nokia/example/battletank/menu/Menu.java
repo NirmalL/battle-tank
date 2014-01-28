@@ -1,5 +1,5 @@
 /**
-* Copyright (c) 2012-2013 Nokia Corporation. All rights reserved.
+* Copyright (c) 2012-2014 Nokia Corporation. All rights reserved.
 * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
 * Oracle and Java are trademarks or registered trademarks of Oracle and/or its
 * affiliates. Other product and company names mentioned herein may be trademarks
@@ -18,7 +18,6 @@ import javax.microedition.lcdui.game.Sprite;
  * Generic class for menu.
  */
 public abstract class Menu {
-
     public static final int POINTER_PRESSED = 0;
     public static final int POINTER_DRAGGED = 1;
     public static final int POINTER_RELEASED = 2;

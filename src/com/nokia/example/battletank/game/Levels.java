@@ -8,6 +8,7 @@
 */
 package com.nokia.example.battletank.game;
 
+import com.nokia.example.battletank.Main;
 import com.nokia.example.battletank.game.entities.Enemy;
 import java.io.IOException;
 import javax.microedition.lcdui.Image;
@@ -37,10 +38,16 @@ public class Levels {
      * @throws ProtectedContentException
      * @throws IOException
      */
-    public static Image getImage(int level) throws IOException {
+    public static Image getImage(int level)
+        throws ProtectedContentException, IOException {
         int levelIndex = (level - 1) % fileNames.length;
-        String fileName = fileNames[levelIndex];
-        return Image.createImage(PATH + fileName);
+        if (levelIndex < 2 || !Main.isTrial()) {
+            String fileName = fileNames[levelIndex];
+            return Image.createImage(PATH + fileName);
+        }
+        else {
+            throw new ProtectedContentException();
+        }
     }
 
     /**

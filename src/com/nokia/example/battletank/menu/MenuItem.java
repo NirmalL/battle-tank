@@ -1,17 +1,18 @@
 /**
-* Copyright (c) 2012-2013 Nokia Corporation. All rights reserved.
+* Copyright (c) 2012-2014 Nokia Corporation. All rights reserved.
 * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
 * Oracle and Java are trademarks or registered trademarks of Oracle and/or its
 * affiliates. Other product and company names mentioned herein may be trademarks
 * or trade names of their respective owners. 
 * See LICENSE.TXT for license information.
 */
+
 package com.nokia.example.battletank.menu;
 
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.Sprite;
 
-/*
+/**
  * Generic class for menu items.
  */
 public class MenuItem {
