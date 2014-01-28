@@ -68,7 +68,7 @@ and Nokia Asha 201
 
 Developed with:
 * Netbeans 7.1.2
-* Nokia Asha SDK 1.0
+* Nokia Asha SDK 1.1
 
 2.1 Known issues
 ----------------
