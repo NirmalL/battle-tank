@@ -10,11 +10,18 @@
 package com.nokia.example.battletank;
 
 import com.nokia.example.battletank.menu.BuyMenu;
+
+/* Make sure that you have Nokia In-App Payment API library added to the
+ * project. Otherwise the following classes to import cannot be found. The
+ * library must be exported too or - even though there are no compilation
+ * erros - the application will crash.
+ */
 import com.nokia.payment.NPayException;
 import com.nokia.payment.NPayListener;
 import com.nokia.payment.NPayManager;
 import com.nokia.payment.ProductData;
 import com.nokia.payment.PurchaseData;
+
 import com.nokia.mid.ui.VirtualKeyboard;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
