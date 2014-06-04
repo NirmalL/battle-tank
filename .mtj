@@ -5,8 +5,8 @@
    </signing>
    <configurations>
       <configuration active="true" name="Nokia_Asha_SDK_1_2">
-         <device group="Nokia Asha SDK 3.0" name="Nokia_Asha_SDK_1_2"/>
-         <symbolSet name="Nokia_Asha_SDK_3_0">
+         <device group="Nokia Asha SDK 1.2" name="Nokia_Asha_SDK_1_2"/>
+         <symbolSet name="Nokia_Asha_SDK_1_2">
             <symbol name="screen.isColor" value="true"/>
             <symbol name="model" value="Nokia Asha SDK 1.2"/>
             <symbol name="NOKIAAPI" value="1.7"/>
