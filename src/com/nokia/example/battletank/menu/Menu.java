@@ -1,11 +1,8 @@
-/**
-* Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
-* Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
-* Oracle and Java are trademarks or registered trademarks of Oracle and/or its
-* affiliates. Other product and company names mentioned herein may be trademarks
-* or trade names of their respective owners. 
-* See LICENSE.TXT for license information.
-*/
+/*
+ * Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
+ * Please see the license file delivered with this project for more details.
+ */
+
 package com.nokia.example.battletank.menu;
 
 import com.nokia.example.battletank.game.Resources;
@@ -14,33 +11,39 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-/*
+/**
  * Generic class for menu.
  */
 public abstract class Menu {
+    // Constants
     public static final int POINTER_PRESSED = 0;
     public static final int POINTER_DRAGGED = 1;
     public static final int POINTER_RELEASED = 2;
-    private String resourcePath;
+    private static final String TAG = "Menu: ";
+
+    // Members
     private final MenuItem[] items;
     private final Listener listener;
+    private String resourcePath;
 
     /**
      * Creates a menu.
      *
      * @param capacity Number of menu items this menu is holding
-     * @param w Width of screen
-     * @param h Height of screen
+     * @param width Width of screen
+     * @param height Height of screen
      * @param listener Menu item click listener
      */
-    protected Menu(int capacity, int w, int h, Listener listener) {
+    protected Menu(int capacity, int width, int height, Listener listener) {
         items = new MenuItem[capacity];
-        if (Math.max(w, h) < Resources.MEDIUM_THRESHOLD) {
+        
+        if (Math.max(width, height) < Resources.MEDIUM_THRESHOLD) {
             resourcePath = "/menu/low/";
         }
         else {
             resourcePath = "/menu/medium/";
         }
+        
         this.listener = listener;
     }
 
@@ -72,6 +75,8 @@ public abstract class Menu {
      * @param selected Sequential number related to the item
      */
     public void selectItem(int selected) {
+        System.out.println(TAG + "selectItem(): " + selected);
+        
         for (int i = 0; i < items.length; i++) {
             items[i].setSelected(i == selected);
         }
@@ -89,6 +94,7 @@ public abstract class Menu {
                 return i;
             }
         }
+        
         return -1;
     }
 
@@ -120,6 +126,8 @@ public abstract class Menu {
      * @param index Index of the item to whom the click event will be sent
      */
     private void clickItem(int index) {
+        System.out.println(TAG + "clickItem(): " + index);
+        
         if (index > -1 && index < items.length) {
             listener.itemClicked(index);
             items[index].setSelected(false);
@@ -143,9 +151,11 @@ public abstract class Menu {
                 else {
                     selectItem(i);
                 }
+                
                 return;
             }
         }
+        
         selectItem(-1);
     }
 
@@ -171,7 +181,6 @@ public abstract class Menu {
     }
 
     public interface Listener {
-
         void itemClicked(int item);
     }
 }

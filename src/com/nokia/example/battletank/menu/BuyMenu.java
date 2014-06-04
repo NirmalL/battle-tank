@@ -1,11 +1,8 @@
 /*
  * Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
- * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
- * Oracle and Java are trademarks or registered trademarks of Oracle and/or its
- * affiliates. Other product and company names mentioned herein may be trademarks
- * or trade names of their respective owners. 
- * See LICENSE.TXT for license information.
+ * Please see the license file delivered with this project for more details.
  */
+
 package com.nokia.example.battletank.menu;
 
 import javax.microedition.lcdui.Font;
@@ -19,8 +16,9 @@ public class BuyMenu
 {
     public static final int BUY = 0;
     public static final int BACK = 1;
+    private static final String TAG = "BuyMenu: ";
     private static final int MENU_ITEM_COUNT =
-            BattleTankCanvas.HW_BACK_KEY_EXISTS ? 1: 2;
+            BattleTankCanvas.HAS_ONE_KEY_BACK ? 1 : 2;
 
     private static String appPrice = null;
     private final Image background;
@@ -33,8 +31,9 @@ public class BuyMenu
     private final Font font = Font.getFont(
         Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 
-    public BuyMenu(int w, int h, Listener l) {
-        super(MENU_ITEM_COUNT, w, h, l);
+    public BuyMenu(int width, int height, Listener listener) {
+        super(MENU_ITEM_COUNT, width, height, listener);
+        System.out.println(TAG + "Constructor: Menu item count is " + MENU_ITEM_COUNT);
         background = loadImage("ad_background.gif");
         setItem(BUY, new MenuItem(loadSprite("buy.png", 2)));
         
@@ -42,7 +41,7 @@ public class BuyMenu
             setItem(BACK, new MenuItem(loadSprite("back.png", 2)));
         }
         
-        setSize(w, h);
+        setSize(width, height);
     }
 
     public final void setSize(int width, int height) {
@@ -77,12 +76,14 @@ public class BuyMenu
         g.fillRect(0, 0, width, height);
         g.drawImage(background, width / 2, height / 2, Graphics.HCENTER
             | Graphics.VCENTER);
+        
         if (appPrice != null) {
             g.setColor(0x00ffffff);
             g.setFont(font);
             g.drawString("now for only " + appPrice, width / 2,
                 topOffset + menuHeight / 9, Graphics.BASELINE | Graphics.HCENTER);
         }
+        
         super.paint(g);
     }
 

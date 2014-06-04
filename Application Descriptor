@@ -3,7 +3,7 @@ Nokia-IAP-Pricepoint-1023608: 1
 Nokia-IAP-Pricepoint-success-battle_tank: 1
 MIDlet-Jar-URL: BattleTank_v1_5.jar
 MicroEdition-Configuration: CLDC-1.1
-MIDlet-Version: 1.5
+MIDlet-Version: 1.5.1
 Nokia-IAP-Pricepoint-1023626: 1
 MIDlet-Vendor: Nokia
 MIDlet-Data-Size: 20000

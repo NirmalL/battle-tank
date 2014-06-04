@@ -1,18 +1,15 @@
-/**
-* Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
-* Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
-* Oracle and Java are trademarks or registered trademarks of Oracle and/or its
-* affiliates. Other product and company names mentioned herein may be trademarks
-* or trade names of their respective owners. 
-* See LICENSE.TXT for license information.
-*/
+/*
+ * Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
+ * Please see the license file delivered with this project for more details.
+ */
+
 package com.nokia.example.battletank.menu;
 
 import com.nokia.example.battletank.Main;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-/*
+/**
  * Class for implementing the main menu.
  */
 public class BattleTankMenu
@@ -49,21 +46,23 @@ public class BattleTankMenu
     }
 
     /**
-     * Set menu size to fit the screen.
-     * @param w width of the menu
-     * @param h height of the menu
+     * Sets the size of the menu so that it fits to the screen.
+     * 
+     * @param width The width of the menu.
+     * @param height The height of the menu.
      */
-    public final void setSize(int w, int h) {
-        width = w;
-        height = h;
+    public final void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
         final int bgW = background.getWidth();
         final int bgH = background.getHeight();
-        final int leftOffset = (w - bgW) / 2;
-        final int topOffset = (h - bgH) / 2;
-        final int menuW = Math.min(w, bgW);
-        final int menuH = Math.min(h, bgH);
+        final int leftOffset = (this.width - bgW) / 2;
+        final int topOffset = (this.height - bgH) / 2;
+        final int menuW = Math.min(this.width, bgW);
+        final int menuH = Math.min(this.height, bgH);
         int x = leftOffset + menuW / 2;
         int y = topOffset + menuH / 9;
+        
         for (int i = 0; i < getSize(); i++) {
             MenuItem item = getItem(i);
             item.setCenter(x, y);

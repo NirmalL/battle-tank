@@ -1,11 +1,7 @@
-/**
-* Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
-* Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
-* Oracle and Java are trademarks or registered trademarks of Oracle and/or its
-* affiliates. Other product and company names mentioned herein may be trademarks
-* or trade names of their respective owners. 
-* See LICENSE.TXT for license information.
-*/
+/*
+ * Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
+ * Please see the license file delivered with this project for more details.
+ */
 
 package com.nokia.example.battletank;
 
@@ -28,7 +24,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
-/*
+/**
  * Main class to handle starting the application, pausing it and exiting it.
  */
 public class Main
@@ -206,7 +202,8 @@ public class Main
                 String[] productIds = { PURCHASE_ID };
                 manager.getProductData(productIds);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -220,11 +217,11 @@ public class Main
      */
     private boolean hasOnekeyBack() {
         String keyboard = System.getProperty("com.nokia.keyboard.type");
+        
         if (keyboard != null) {
             return (keyboard.equalsIgnoreCase("OnekeyBack"));
         }
-        else {
-            return false;
-        }
+        
+        return false;
     }
 }

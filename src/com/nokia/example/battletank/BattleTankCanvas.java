@@ -1,11 +1,7 @@
-/**
-* Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
-* Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
-* Oracle and Java are trademarks or registered trademarks of Oracle and/or its
-* affiliates. Other product and company names mentioned herein may be trademarks
-* or trade names of their respective owners. 
-* See LICENSE.TXT for license information.
-*/
+/*
+ * Copyright (c) 2012-2014 Microsoft Mobile. All rights reserved.
+ * Please see the license file delivered with this project for more details.
+ */
 
 package com.nokia.example.battletank;
 
@@ -35,7 +31,7 @@ public class BattleTankCanvas
     extends GameCanvas
     implements GameThread.Listener, CommandListener
 {
-    public static final boolean HW_BACK_KEY_EXISTS;
+    public static final boolean HAS_ONE_KEY_BACK;
     private static final int MAX_RENDERING_FPS = 12;
     private static final int LEFT_SOFTKEY = -6;
     private static final int RIGHT_SOFTKEY = -7;
@@ -57,7 +53,7 @@ public class BattleTankCanvas
     private Command backCommand;
 
     static {
-        HW_BACK_KEY_EXISTS =
+        HAS_ONE_KEY_BACK =
             System.getProperty("com.nokia.keyboard.type")
                 .equalsIgnoreCase("OnekeyBack");
     }
@@ -71,41 +67,37 @@ public class BattleTankCanvas
         super(false);
         setFullScreenMode(true);
         this.main = main;
-
+        
         // create menus
         createMenu();
         createGame();
         createBuyMenu();
         createHelpMenu();
         createAboutMenu();
-
+        
         createPointerEventHandler();
-
-        if (HW_BACK_KEY_EXISTS) {
-            backCommand = new Command("Back", Command.BACK, 0);
-            this.addCommand(backCommand);
-            this.setCommandListener(this);
-        }
+        
+        backCommand = new Command("Back", Command.BACK, 0);
+        addCommand(backCommand);
+        setCommandListener(this);
     }
 
-    /**
-     * Gets the states of the physical game keys.
-     *
-     * @return An integer containing the key state information (one bit per
-     * key), or 0 if the GameCanvas is not currently shown.
-     */
-    public int getKeyStates() {
-        int keyStates = super.getKeyStates();
-        if (keyStates != 0) {
-            pointerKeyState = 0;
+    public void runGameLoop() {
+        if (visibleMenu != null) {
+            visibleMenu.render(graphics);
         }
         else {
-            keyStates = pointerKeyState;
-            if (pointerKeyState == FIRE_PRESSED) {
-                pointerKeyState = 0;
-            }
+            game.update(getKeyStates());
+            game.render(graphics);
         }
-        return keyStates;
+        
+        flushGraphics();
+    }
+
+    private void startGameLoop() {
+        stopGameLoop();
+        gameLoop = new GameThread(this, MAX_RENDERING_FPS);
+        gameLoop.start();
     }
 
     /**
@@ -115,6 +107,7 @@ public class BattleTankCanvas
         if (visibleMenu == menu) {
             return;
         }
+        
         visibleMenu = menu;
         menu.setSounds(game.soundsEnabled);
         menu.selectItem(hasPointerEvents() ? -1 : 0);
@@ -124,10 +117,12 @@ public class BattleTankCanvas
      * Hides current menu view.
      */
     public void hideCurrentMenu() {
-        if (visibleMenu == menu && AudioManager.areSoundsEnabled()
-            != game.soundsEnabled) {
+        if (visibleMenu == menu
+            && AudioManager.areSoundsEnabled() != game.soundsEnabled)
+        {
             AudioManager.setSoundsEnabled(game.soundsEnabled);
         }
+        
         visibleMenu = null;
     }
 
@@ -145,33 +140,6 @@ public class BattleTankCanvas
      */
     public void hideBuyMenuWaitIndicator() {
         buyMenu.hideWaitIndicator();
-    }
-
-    /**
-     * Saves the current state of the game to RecordStore
-     */
-    public void saveGame() {
-        if (game == null) {
-            return;
-        }
-        try {
-            RecordStore gameState = RecordStore.openRecordStore("GameState",
-                true);
-            if (gameState.getNumRecords() == 0) {
-                gameState.addRecord(null, 0, 0);
-            }
-            byte[] data = game.getState();
-            gameState.setRecord(getRecordId(gameState), data, 0, data.length);
-            gameState.closeRecordStore();
-        }
-        catch (Exception e) {
-            try {
-                RecordStore.deleteRecordStore("GameState");
-            }
-            catch (RecordStoreException rse) {
-                // Nothing to do here.
-            }
-        }
     }
 
     /**
@@ -197,6 +165,55 @@ public class BattleTankCanvas
         showMenu();
         aboutMenu.selectItem(hasPointerEvents() ? -1 : 0);
         visibleMenu = aboutMenu;
+    }
+
+    /**
+     * Gets the states of the physical game keys.
+     *
+     * @return An integer containing the key state information (one bit per
+     * key), or 0 if the GameCanvas is not currently shown.
+     */
+    public int getKeyStates() {
+        int keyStates = super.getKeyStates();
+        if (keyStates != 0) {
+            pointerKeyState = 0;
+        }
+        else {
+            keyStates = pointerKeyState;
+            
+            if (pointerKeyState == FIRE_PRESSED) {
+                pointerKeyState = 0;
+            }
+        }
+        return keyStates;
+    }
+
+    /**
+     * Saves the current state of the game to RecordStore
+     */
+    public void saveGame() {
+        if (game == null) {
+            return;
+        }
+        try {
+            RecordStore gameState = RecordStore.openRecordStore("GameState", true);
+            
+            if (gameState.getNumRecords() == 0) {
+                gameState.addRecord(null, 0, 0);
+            }
+            
+            byte[] data = game.getState();
+            gameState.setRecord(getRecordId(gameState), data, 0, data.length);
+            gameState.closeRecordStore();
+        }
+        catch (Exception e) {
+            try {
+                RecordStore.deleteRecordStore("GameState");
+            }
+            catch (RecordStoreException rse) {
+                // Nothing to do here
+            }
+        }
     }
 
     /**
@@ -371,44 +388,6 @@ public class BattleTankCanvas
         }
     }
 
-    private void startGameLoop() {
-        stopGameLoop();
-        gameLoop = new GameThread(this, MAX_RENDERING_FPS);
-        gameLoop.start();
-    }
-
-    private void createHelpMenu() {
-        helpMenu = new HelpMenu(getWidth(), getHeight(), hasPointerEvents(),
-            new Menu.Listener() {
-
-                public void itemClicked(int item) {
-                    switch (item) {
-                        case HelpMenu.BACK:
-                            hideCurrentMenu();
-                            showMenu();
-                            break;
-                    }
-                }
-            });
-    }
-
-    private void createAboutMenu() {
-        aboutMenu = new AboutMenu(getWidth(), getHeight(), new Menu.Listener() {
-            public void itemClicked(int item) {
-                switch (item) {
-                    case AboutMenu.BACK:
-                        hideCurrentMenu();
-                        showMenu();
-                        break;
-                    case BuyMenu.BACK:
-                        hideCurrentMenu();
-                        showMenu();
-                        break;
-                }
-            }
-        }, main);
-    }
-
     /**
      * Create game. If there is a saved game in the RecordStore,
      * load the previous game state. Otherwise create a new game.
@@ -444,48 +423,80 @@ public class BattleTankCanvas
     }
 
     private int getRecordId(RecordStore store)
-        throws RecordStoreException {
+        throws RecordStoreException
+    {
         RecordEnumeration e = store.enumerateRecords(null, null, false);
+        int recordId = -1;
+        
         try {
-            return e.nextRecordId();
+            recordId =  e.nextRecordId();
         }
         finally {
             e.destroy();
         }
+        
+        return recordId;
     }
 
     private void createPointerEventHandler() {
-        pointerEventHandler = new PointerEventHandler(getWidth(), getHeight(),
-            new PointerEventHandler.Listener() {
+        pointerEventHandler =
+            new PointerEventHandler(getWidth(), getHeight(),
+                new PointerEventHandler.Listener() {
+                    public void onMoveLeft() {
+                        pointerKeyState = LEFT_PRESSED;
+                    }
+                    
+                    public void onMoveRight() {
+                        pointerKeyState = RIGHT_PRESSED;
+                    }
+                    
+                    public void onMoveUp() {
+                        pointerKeyState = UP_PRESSED;
+                    }
+                    
+                    public void onMoveDown() {
+                        pointerKeyState = DOWN_PRESSED;
+                    }
+                    
+                    public void onFire() {
+                        pointerKeyState = FIRE_PRESSED;
+                    }
+                    
+                    public void onLeftSoftKey() {
+                        leftSoftkey();
+                    }
+                    
+                    public void onRightSoftKey() {
+                        rightSoftkey();
+                    }
+                });
+    }
 
-                public void onMoveLeft() {
-                    pointerKeyState = LEFT_PRESSED;
-                }
-
-                public void onMoveRight() {
-                    pointerKeyState = RIGHT_PRESSED;
-                }
-
-                public void onMoveUp() {
-                    pointerKeyState = UP_PRESSED;
-                }
-
-                public void onMoveDown() {
-                    pointerKeyState = DOWN_PRESSED;
-                }
-
-                public void onFire() {
-                    pointerKeyState = FIRE_PRESSED;
-                }
-
-                public void onLeftSoftKey() {
-                    leftSoftkey();
-                }
-
-                public void onRightSoftKey() {
-                    rightSoftkey();
+    private void createHelpMenu() {
+        helpMenu = new HelpMenu(getWidth(), getHeight(), hasPointerEvents(),
+            new Menu.Listener() {
+                public void itemClicked(int item) {
+                    switch (item) {
+                        case HelpMenu.BACK:
+                            hideCurrentMenu();
+                            showMenu();
+                            break;
+                    }
                 }
             });
+    }
+
+    private void createAboutMenu() {
+        aboutMenu = new AboutMenu(getWidth(), getHeight(), new Menu.Listener() {
+            public void itemClicked(int item) {
+                switch (item) {
+                    case AboutMenu.BACK:
+                        hideCurrentMenu();
+                        showMenu();
+                        break;
+                }
+            }
+        }, main);
     }
 
     private void createBuyMenu() {
@@ -496,22 +507,17 @@ public class BattleTankCanvas
                         if (main.purchaseFullVersion()) {
                             buyMenu.showWaitIndicator();
                         }
-                        
+                    case BuyMenu.BACK:
+                        hideCurrentMenu();
+                        showMenu();
                         break;
                 }
             }
         });
     }
 
-    private void stopGameLoop() {
-        if (gameLoop != null) {
-            gameLoop.cancel();
-        }
-    }
-
     private void createMenu() {
         menu = new BattleTankMenu(getWidth(), getHeight(), new Menu.Listener() {
-
             public void itemClicked(int item) {
                 switch (item) {
                     case BattleTankMenu.RESUME:
@@ -536,18 +542,13 @@ public class BattleTankCanvas
                 }
             }
         });
+        
         menu.setBuy(Main.isTrial());
     }
 
-    public void runGameLoop() {
-        if (visibleMenu != null) {
-            visibleMenu.render(graphics);
+    private void stopGameLoop() {
+        if (gameLoop != null) {
+            gameLoop.cancel();
         }
-        else {
-            game.update(getKeyStates());
-            game.render(graphics);
-        }
-
-        flushGraphics();
     }
 }
